@@ -98,7 +98,7 @@ def summarize_csv(file_path):
                 axes = [axes]
             
             for idx, num_col in enumerate(numeric_cols[:3]):
-                ax = axes[idx] if len(numeric_cols) > 1 else axes[0]
+                ax = axes[idx]
                 daily_data = df.groupby(date_col)[num_col].agg(['mean', 'sum', 'count'])
                 daily_data['mean'].plot(ax=ax, label='Average', linewidth=2)
                 ax.set_title(f'{num_col} Over Time')

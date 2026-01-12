@@ -28,7 +28,7 @@ Analyze CSV files and generate comprehensive summaries with statistical insights
 **Quick Start:**
 ```bash
 pip install pandas matplotlib seaborn
-python skills/csv-data-summary/scripts/analyze.py resources/sample.csv
+python skills/csv-data-summary/scripts/analyze.py skills/csv-data-summary/resources/sample.csv
 ```
 
 ### Excel Sheet Reference
