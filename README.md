@@ -11,6 +11,26 @@ Skills are packaged instructions and code that help Claude AI perform specific t
 
 ## Available Skills
 
+### CSV Data Summary
+
+Analyze CSV files and generate comprehensive summaries with statistical insights and visualizations.
+
+**Features:**
+- Automatic data type detection and adaptive analysis
+- Summary statistics and correlations
+- Data quality checks (missing values, outliers)
+- Time-series trend analysis
+- Automatic visualization generation (heatmaps, distributions, trends)
+- Categorical data analysis
+
+**Location:** [`skills/csv-data-summary/`](./skills/csv-data-summary/)
+
+**Quick Start:**
+```bash
+pip install pandas matplotlib seaborn
+python skills/csv-data-summary/scripts/analyze.py resources/sample.csv
+```
+
 ### Excel Sheet Reference
 
 Create Excel files with multiple sheets and cross-sheet formula references.
@@ -35,6 +55,14 @@ python skills/excel-sheet-reference/scripts/create_excel_with_references.py
 ```
 oh-my-skills/
 ├── skills/                    # All skills directory
+│   ├── csv-data-summary/      # CSV data analysis and visualization skill
+│   │   ├── SKILL.md          # Skill definition and instructions
+│   │   ├── EXAMPLES.md       # Additional examples and use cases
+│   │   ├── requirements.txt  # Python dependencies
+│   │   ├── scripts/          # Python scripts for data analysis
+│   │   │   └── analyze.py
+│   │   └── resources/        # Sample data files
+│   │       └── sample.csv
 │   └── excel-sheet-reference/ # Excel cross-sheet reference skill
 │       ├── SKILL.md          # Skill definition and instructions
 │       ├── EXAMPLES.md       # Additional examples and use cases
