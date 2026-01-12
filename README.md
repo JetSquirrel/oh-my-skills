@@ -1,6 +1,6 @@
 # Oh My Skills
 
-A collection of Claude AI skills for various tasks. This repository is inspired by [Anthropic's skills repository](https://github.com/anthropics/skills).
+A collection of Claude AI skills for various tasks. Just for my personal.
 
 ## What are Skills?
 
