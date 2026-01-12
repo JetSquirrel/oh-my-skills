@@ -86,25 +86,35 @@ def summarize_csv(file_path):
         date_col = date_cols[0]
         df[date_col] = pd.to_datetime(df[date_col], errors='coerce')
         
-        date_range = df[date_col].max() - df[date_col].min()
-        summary.append(f"Date range: {df[date_col].min()} to {df[date_col].max()}")
-        summary.append(f"Span: {date_range.days} days")
-        
-        # Create time-series plots for numeric columns
-        if numeric_cols:
-            n_plots = min(3, len(numeric_cols))
-            fig, axes = plt.subplots(n_plots, 1, 
-                                    figsize=(12, 4 * n_plots))
-            if n_plots == 1:
-                axes = [axes]
+        # Check if we have valid dates
+        if df[date_col].isna().all():
+            summary.append("⚠️ Warning: All date values are invalid, skipping time series analysis")
+        else:
+            # Filter out NaT values for accurate date range
+            valid_dates = df[date_col].dropna()
+            date_range = valid_dates.max() - valid_dates.min()
+            summary.append(f"Date range: {valid_dates.min()} to {valid_dates.max()}")
+            summary.append(f"Span: {date_range.days} days")
             
-            # Skip time series if all dates are invalid
-            if df[date_col].isna().all():
-                summary.append("⚠️ Warning: All date values are invalid, skipping time series plots")
-            else:
+            # Warn if many dates are invalid
+            invalid_count = df[date_col].isna().sum()
+            if invalid_count > 0:
+                invalid_pct = (invalid_count / len(df)) * 100
+                summary.append(f"⚠️ Warning: {invalid_count} rows ({invalid_pct:.1f}%) have invalid dates")
+            
+            # Create time-series plots for numeric columns
+            if numeric_cols:
+                n_plots = min(3, len(numeric_cols))
+                fig, axes = plt.subplots(n_plots, 1, 
+                                        figsize=(12, 4 * n_plots))
+                if n_plots == 1:
+                    axes = [axes]
+                
                 for idx, num_col in enumerate(numeric_cols[:3]):
                     ax = axes[idx]
-                    daily_data = df.groupby(date_col)[num_col].agg(['mean', 'sum', 'count'])
+                    # Filter out NaT values before grouping
+                    valid_data = df[df[date_col].notna()]
+                    daily_data = valid_data.groupby(date_col)[num_col].agg(['mean', 'sum', 'count'])
                     daily_data['mean'].plot(ax=ax, label='Average', linewidth=2)
                     ax.set_title(f'{num_col} Over Time')
                     ax.set_xlabel('Date')
