@@ -12,8 +12,23 @@ def summarize_csv(file_path):
         
     Returns:
         str: Formatted comprehensive analysis of the dataset
+        
+    Raises:
+        FileNotFoundError: If the file doesn't exist
+        pd.errors.EmptyDataError: If the CSV file is empty
+        pd.errors.ParserError: If the CSV file has invalid format
     """
-    df = pd.read_csv(file_path)
+    try:
+        df = pd.read_csv(file_path)
+    except FileNotFoundError:
+        return f"Error: File '{file_path}' not found."
+    except pd.errors.EmptyDataError:
+        return f"Error: File '{file_path}' is empty."
+    except pd.errors.ParserError as e:
+        return f"Error: Failed to parse CSV file '{file_path}': {str(e)}"
+    except Exception as e:
+        return f"Error: An unexpected error occurred while reading '{file_path}': {str(e)}"
+    
     summary = []
     charts_created = []
     
@@ -84,22 +99,24 @@ def summarize_csv(file_path):
     if date_cols:
         summary.append(f"\n📅 TIME SERIES ANALYSIS:")
         date_col = date_cols[0]
-        df[date_col] = pd.to_datetime(df[date_col], errors='coerce')
+        # Create a copy to avoid modifying original DataFrame
+        df_dates = df.copy()
+        df_dates[date_col] = pd.to_datetime(df_dates[date_col], errors='coerce')
         
         # Check if we have valid dates
-        if df[date_col].isna().all():
+        if df_dates[date_col].isna().all():
             summary.append("⚠️ Warning: All date values are invalid, skipping time series analysis")
         else:
             # Filter out NaT values for accurate date range
-            valid_dates = df[date_col].dropna()
+            valid_dates = df_dates[date_col].dropna()
             date_range = valid_dates.max() - valid_dates.min()
             summary.append(f"Date range: {valid_dates.min()} to {valid_dates.max()}")
             summary.append(f"Span: {date_range.days} days")
             
             # Warn if many dates are invalid
-            invalid_count = df[date_col].isna().sum()
+            invalid_count = df_dates[date_col].isna().sum()
             if invalid_count > 0:
-                invalid_pct = (invalid_count / len(df)) * 100
+                invalid_pct = (invalid_count / len(df_dates)) * 100
                 summary.append(f"⚠️ Warning: {invalid_count} rows ({invalid_pct:.1f}%) have invalid dates")
             
             # Create time-series plots for numeric columns
@@ -113,7 +130,7 @@ def summarize_csv(file_path):
                 for idx, num_col in enumerate(numeric_cols[:3]):
                     ax = axes[idx]
                     # Filter out NaT values before grouping
-                    valid_data = df[df[date_col].notna()]
+                    valid_data = df_dates[df_dates[date_col].notna()]
                     daily_data = valid_data.groupby(date_col)[num_col].agg(['mean', 'sum', 'count'])
                     daily_data['mean'].plot(ax=ax, label='Average', linewidth=2)
                     ax.set_title(f'{num_col} Over Time')
