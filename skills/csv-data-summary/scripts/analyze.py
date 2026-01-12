@@ -1,3 +1,4 @@
+import sys
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -185,7 +186,6 @@ def summarize_csv(file_path):
 
 if __name__ == "__main__":
     # Test with sample data
-    import sys
     if len(sys.argv) > 1:
         file_path = sys.argv[1]
     else:
