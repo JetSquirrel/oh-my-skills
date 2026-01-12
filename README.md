@@ -22,23 +22,24 @@ Create Excel files with multiple sheets and cross-sheet formula references.
 - INDEX-MATCH combinations
 - Error handling with IFERROR
 
-**Location:** [`excel-sheet-reference/`](./excel-sheet-reference/)
+**Location:** [`skills/excel-sheet-reference/`](./skills/excel-sheet-reference/)
 
 **Quick Start:**
 ```bash
 pip install openpyxl
-python excel-sheet-reference/scripts/create_excel_with_references.py
+python skills/excel-sheet-reference/scripts/create_excel_with_references.py
 ```
 
 ## Repository Structure
 
 ```
 oh-my-skills/
-├── excel-sheet-reference/     # Excel cross-sheet reference skill
-│   ├── SKILL.md              # Skill definition and instructions
-│   ├── EXAMPLES.md           # Additional examples and use cases
-│   └── scripts/              # Python scripts for Excel manipulation
-│       └── create_excel_with_references.py
+├── skills/                    # All skills directory
+│   └── excel-sheet-reference/ # Excel cross-sheet reference skill
+│       ├── SKILL.md          # Skill definition and instructions
+│       ├── EXAMPLES.md       # Additional examples and use cases
+│       └── scripts/          # Python scripts for Excel manipulation
+│           └── create_excel_with_references.py
 ├── LICENSE                    # MIT License
 └── README.md                  # This file
 ```
@@ -53,14 +54,14 @@ oh-my-skills/
 
 ## Adding New Skills
 
-To add a new skill:
+This repository is designed to hold multiple skills. To add a new skill:
 
-1. Create a new directory with a descriptive name
+1. Create a new directory under `skills/` with a descriptive name (use lowercase and hyphens)
 2. Add a `SKILL.md` file with YAML frontmatter:
    ```yaml
    ---
    name: your-skill-name
-   description: Brief description of what the skill does
+   description: Brief description of what the skill does (max 1024 chars)
    ---
    # Instructions
    [Your detailed instructions here]
@@ -70,6 +71,26 @@ To add a new skill:
    - `resources/` - Templates, data files, etc.
    - `EXAMPLES.md` - Additional examples
    - `REFERENCE.md` - Reference documentation
+   - `TROUBLESHOOTING.md` - Common issues and solutions
+
+### Skill Naming Conventions
+
+- Use lowercase letters and hyphens: `my-skill-name`
+- Keep names descriptive but concise (≤64 characters)
+- Match the directory name to the skill name in SKILL.md
+
+### Example Structure for a New Skill
+
+```
+skills/
+└── my-new-skill/
+    ├── SKILL.md              # Required: Metadata and instructions
+    ├── EXAMPLES.md           # Optional: Usage examples
+    ├── scripts/              # Optional: Implementation code
+    │   └── example.py
+    └── resources/            # Optional: Templates and assets
+        └── template.xlsx
+```
 
 ## Requirements
 
