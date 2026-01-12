@@ -14,6 +14,7 @@ Requirements:
 
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment
+from openpyxl.utils import get_column_letter
 
 
 def create_basic_example():
@@ -84,7 +85,6 @@ def create_advanced_example():
     for idx, header in enumerate(headers, start=1):
         cell = products.cell(row=1, column=idx)
         cell.value = header
-        cell.font = Font(bold=True)
         cell.fill = PatternFill(start_color="4472C4", end_color="4472C4", fill_type="solid")
         cell.font = Font(bold=True, color="FFFFFF")
         cell.alignment = Alignment(horizontal='center')
@@ -110,7 +110,6 @@ def create_advanced_example():
     for idx, header in enumerate(order_headers, start=1):
         cell = orders.cell(row=1, column=idx)
         cell.value = header
-        cell.font = Font(bold=True)
         cell.fill = PatternFill(start_color="70AD47", end_color="70AD47", fill_type="solid")
         cell.font = Font(bold=True, color="FFFFFF")
         cell.alignment = Alignment(horizontal='center')
@@ -168,7 +167,7 @@ def create_advanced_example():
                 try:
                     if len(str(cell.value)) > max_length:
                         max_length = len(cell.value)
-                except:
+                except (TypeError, AttributeError):
                     pass
             adjusted_width = min(max_length + 2, 30)
             sheet.column_dimensions[column[0].column_letter].width = adjusted_width
@@ -194,7 +193,6 @@ def create_match_index_example():
     for idx, header in enumerate(headers, start=1):
         cell = data.cell(row=1, column=idx)
         cell.value = header
-        cell.font = Font(bold=True)
         cell.fill = PatternFill(start_color="5B9BD5", end_color="5B9BD5", fill_type="solid")
         cell.font = Font(bold=True, color="FFFFFF")
     
@@ -222,7 +220,6 @@ def create_match_index_example():
     lookup['E1'] = 'Salary'
     
     for cell_ref in ['A1', 'B1', 'C1', 'D1', 'E1']:
-        lookup[cell_ref].font = Font(bold=True)
         lookup[cell_ref].fill = PatternFill(start_color="ED7D31", end_color="ED7D31", fill_type="solid")
         lookup[cell_ref].font = Font(bold=True, color="FFFFFF")
     
@@ -243,7 +240,7 @@ def create_match_index_example():
     # Adjust column widths
     for sheet in [data, lookup]:
         for col in range(1, 6):
-            sheet.column_dimensions[chr(64 + col)].width = 15
+            sheet.column_dimensions[get_column_letter(col)].width = 15
     
     wb.save('employee_lookup_with_match.xlsx')
     print("✓ Created: employee_lookup_with_match.xlsx")
