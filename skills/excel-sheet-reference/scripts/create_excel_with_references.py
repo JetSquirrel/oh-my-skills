@@ -168,6 +168,7 @@ def create_advanced_example():
                     if len(str(cell.value)) > max_length:
                         max_length = len(cell.value)
                 except (TypeError, AttributeError):
+                    # Skip cells with None or non-string values that can't be measured
                     pass
             adjusted_width = min(max_length + 2, 30)
             sheet.column_dimensions[column[0].column_letter].width = adjusted_width
@@ -251,13 +252,6 @@ def main():
     print("=" * 60)
     print("Excel Sheet Reference Examples")
     print("=" * 60)
-    
-    try:
-        import openpyxl
-    except ImportError:
-        print("Error: openpyxl is not installed.")
-        print("Please install it with: pip install openpyxl")
-        return
     
     # Create all examples
     create_basic_example()
