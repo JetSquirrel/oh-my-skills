@@ -92,29 +92,33 @@ def summarize_csv(file_path):
         
         # Create time-series plots for numeric columns
         if numeric_cols:
-            fig, axes = plt.subplots(min(3, len(numeric_cols)), 1, 
-                                    figsize=(12, 4 * min(3, len(numeric_cols))))
-            if len(numeric_cols) == 1:
+            n_plots = min(3, len(numeric_cols))
+            fig, axes = plt.subplots(n_plots, 1, 
+                                    figsize=(12, 4 * n_plots))
+            if n_plots == 1:
                 axes = [axes]
             
-            for idx, num_col in enumerate(numeric_cols[:3]):
-                ax = axes[idx]
-                daily_data = df.groupby(date_col)[num_col].agg(['mean', 'sum', 'count'])
-                daily_data['mean'].plot(ax=ax, label='Average', linewidth=2)
-                ax.set_title(f'{num_col} Over Time')
-                ax.set_xlabel('Date')
-                ax.set_ylabel(num_col)
-                ax.legend()
-                ax.grid(True, alpha=0.3)
-            
-            plt.tight_layout()
-            plt.savefig('time_series_analysis.png', dpi=150)
-            plt.close()
-            charts_created.append('time_series_analysis.png')
+            # Skip time series if all dates are invalid
+            if df[date_col].isna().all():
+                summary.append("⚠️ Warning: All date values are invalid, skipping time series plots")
+            else:
+                for idx, num_col in enumerate(numeric_cols[:3]):
+                    ax = axes[idx]
+                    daily_data = df.groupby(date_col)[num_col].agg(['mean', 'sum', 'count'])
+                    daily_data['mean'].plot(ax=ax, label='Average', linewidth=2)
+                    ax.set_title(f'{num_col} Over Time')
+                    ax.set_xlabel('Date')
+                    ax.set_ylabel(num_col)
+                    ax.legend()
+                    ax.grid(True, alpha=0.3)
+                
+                plt.tight_layout()
+                plt.savefig('time_series_analysis.png', dpi=150)
+                plt.close()
+                charts_created.append('time_series_analysis.png')
     
     # Distribution plots for numeric columns
     if numeric_cols:
-        n_cols = min(4, len(numeric_cols))
         fig, axes = plt.subplots(2, 2, figsize=(12, 10))
         axes = axes.flatten()
         
